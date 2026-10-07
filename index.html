@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحة الـ HTML المستقلة لجلب الـ JSON 🚀</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0b0f19;
+            color: #e6edf3;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #161b22;
+            padding: 35px;
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            text-align: center;
+            border: 1px solid #30363d;
+            width: 450px;
+        }
+        h2 {
+            color: #58a6ff;
+            margin-bottom: 10px;
+        }
+        p {
+            color: #8b949e;
+            font-size: 14px;
+        }
+        button {
+            background-color: #1f6feb;
+            color: white;
+            border: none;
+            padding: 12px 22px;
+            font-size: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 15px;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background-color: #388bfd;
+        }
+        pre {
+            background-color: #0d1117;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #30363d;
+            text-align: left;
+            direction: ltr;
+            font-family: 'Courier New', Courier, monospace;
+            color: #7ee787;
+            margin-top: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>جلب بيانات الـ JSON ⚡</h2>
+        <p>الصفحة دي هتعمل Fetch مباشرة على سيرفرك المخصص في Tailscale.</p>
+        <button onclick="getDataFromServer()">اتصل بالسيرفر واسحب الداتا 🔄</button>
+        <pre id="jsonOutput">في انتظار الضغط على الزرار يا وحش... ⏳</pre>
+    </div>
+
+    <script>
+        async function getDataFromServer() {
+            const outputBox = document.getElementById('jsonOutput');
+            outputBox.innerText = "جاري إرسال الطلب للسيرفر... ⏳";
+
+            try {
+                // صفحة الـ HTML هي اللي بتعمل الـ Fetch بنفسها هنا 👇
+                const response = await fetch('http://100.95.119.88:5000/', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`السيرفر رد بكود خطأ: ${response.status}`);
+                }
+
+                // تحويل الرد إلى JSON
+                const jsonData = await response.json();
+                
+                // عرض الداتا بشكل منسق جوه الصندوق
+                outputBox.innerText = JSON.stringify(jsonData, null, 2);
+
+            } catch (error) {
+                outputBox.innerText = `❌ حصل مشكلة في الاتصال:\n${error.message}\n\nتأكد إن:\n1. سيرفر الفلاسك شغال.\n2. مفعل CORS على الفلاسك.\n3. متصل بشبكة Tailscale.`;
+            }
+        }
+    </script>
+
+</body>
+</html>
